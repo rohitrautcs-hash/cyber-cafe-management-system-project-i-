@@ -76,7 +76,7 @@ void printReceipt(struct UserRecord user) {
     printf("----------------------------\n");
 
     printf(" Duration      :%.2f\n", user.duration_minutes);
-    printf(" Rate          :Rs%.2f / min\n", RATE_PER_MINUTE);
+    printf(" Rate          :Rs%d / min\n", RATE_PER_MINUTE);
     printf("---------------------------\n");
     printf(" Total bill    :Rs%.2f\n", user.total_bill);
     printf("==============================\n");

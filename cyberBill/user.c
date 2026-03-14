@@ -16,6 +16,9 @@
  #include "records.h"
  #include <time.h> // for time-related functions
 
+ #include "billing.h" // for calculateBill and printReceipt functions
+
+
 
   /*
  - This function runs when the owner chooses the "Check In" option.
@@ -159,39 +162,28 @@
 
     users[foundIndex].logout_time = time(NULL); // get the current time and save it as the logout time
 
-    // calculate how long they used the PC in minutes
-
-    double duration_seconds = difftime(users[foundIndex].logout_time, users[foundIndex].login_time); // calculate the difference in seconds between logout and login time
-
-    users[foundIndex].duration_minutes = duration_seconds / 60.0; // covert seconds to minutes
-
-
-    // calculate the total bill based on the duration and the rate per minute 
-
-    users[foundIndex].total_bill = users[foundIndex].duration_minutes * RATE_PER_MINUTE; 
-
+    
     // mark them as no longer active since they are leaving 
     users[foundIndex].is_active = 0;
 
-    // Now we can print a receipt for the customer with all their details
+    /* 
+  - calculateBill() and printReceipt()
+  - are used in billing.c.
+ 
+  - user.c finds the customer information.
+  - billing.c calculates the bill and
+  - prints the receipt.
+  
+  - Each file has its own job.
+  This keeps the program clean and organized.
+   */
 
-    printf("   Cyber Café Receipt \n");
-    printf(" ------------------- \n");
-    printf(" Customer Name: %s \n", users[foundIndex].name);
-    printf("   ID         : %d \n", users[foundIndex].id);
-    printf(" PC Number    : %s \n", users[foundIndex].pc_number);
-    printf(" Login Time   : %s", ctime(&users[foundIndex].login_time)); // ctime() converts the time_t value to a human-readable string
 
-    printf("------------------------\n");
-    printf("Time used      : %.2lf minutes \n", users[foundIndex].duration_minutes);
-    printf("Total Bill     : %.2lf \n", users[foundIndex].total_bill);
-    printf("------------------------\n");
-    printf(" Thank you for visiting our cyber café!, please come again \n");
+   // calculate the bill (lives in billing.c)
+    calculateBill(&users[foundIndex]); // pass the address
 
-    /* Finally, we need to save the updated record back to the file.
-     Since we changed one record in the array, 
-     it's easier to just rewrite the entire file with the updated array.
-     */
+    //print the receipt (also in billing.c)
+    printReceipt(users[foundIndex]); // pass the struct by value since we only need to read it, not change it
 
      updateFile(users, count); 
 
